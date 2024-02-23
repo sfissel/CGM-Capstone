@@ -1,1 +1,1 @@
-# CGM-Capstone
+# Continuous Glucose Monitoring Capstone Project
