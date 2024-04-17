@@ -1,0 +1,135 @@
+---
+title: "capston"
+author: "Tripat Panesar"
+date: "2024-04-17"
+output: html_document
+---
+
+```{r}
+library(ggplot2)
+library(reshape2)
+library(dplyr)
+```
+
+```{r}
+data <- read.csv("/Users/tripatpanesar/Desktop/CAP/Model_RMSEs.csv")
+data
+```
+
+```{r}
+cols_to_keep <- c("Missing_Count", grep("^AVG", names(data), value = TRUE))
+cols_to_keep <- cols_to_keep[!cols_to_keep %in% c("AVG_AA_RMSE")]
+data_melted <- melt(data[, cols_to_keep], id.vars = "Missing_Count")
+```
+```{r}
+ggplot(data_melted, aes(x = Missing_Count, y = value, color = variable)) +
+  geom_smooth(se = FALSE) + # 'se = FALSE' disables the confidence interval shading
+  labs(title = "Smooth Line Graph of RMSE by Missing Data Count",
+       x = "Number of Missing Data",
+       y = "RMSE Value",
+       color = "Method") +
+  theme_minimal() +
+  scale_color_manual(values = c("AVG_Spline_RMSE" = "blue", "AVG_Linear_RMSE" = "red", "AVG_Stine_RMSE" = "green", "AVG_KF_RMSE" = "orange", "AVG_NN_RMSE" = "purple", "AVG_LOCF_RMSE" = "brown"),
+                     labels = c("AVG_Spline_RMSE" = "Cubic Spline Interpolation",
+                                "AVG_Linear_RMSE" = "Linear Interpolation",
+                                "AVG_Stine_RMSE" = "Stineman Interpolation",
+                                "AVG_KF_RMSE" = "Kalman Smoothing",
+                                "AVG_NN_RMSE" = "Neural Net",
+                                "AVG_LOCF_RMSE" = "Last Observation Carried Forward"))
+```
+
+```{r}
+ggplot(data_melted, aes(x = Missing_Count, y = value, color = variable)) +
+  geom_smooth(se = F) +
+  labs(title = "Line Graph of RMSE by Missing Data Count",
+       x = "Number of Missing Data",
+       y = "RMSE Value",
+       color = "Method") +
+  theme_minimal()
+```
+```{r}
+ggplot(data_melted, aes(x = Missing_Count, y = value, color = variable)) +
+  geom_smooth(se = FALSE) + # 'se = FALSE' disables the confidence interval shading
+  labs(title = "Smooth Line Graph of RMSE by Missing Data Count",
+       x = "Number of Missing Data",
+       y = "RMSE Value",
+       color = "Method") +
+  theme_minimal() +
+  scale_color_manual(values = c("AVG_NN_RMSE" = "blue", "AVG_Spline_RMSE" = "red", "AVG_Linear_RMSE" = "green", "AVG_Stine_RMSE" = "purple", "AVG_KF_RMSE" = "orange", "AVG_AA_RMSE" = "brown", "AVG_LOCF_RMSE" = "pink"),
+                     labels = c("AVG_NN_RMSE" = "Neural Net", "AVG_Spline_RMSE" = "Spline", "AVG_Linear_RMSE" = "Linear", "AVG_Stine_RMSE" = "Stine", "AVG_KF_RMSE" = "Kalman Filter", "AVG_AA_RMSE" = "Auto Adjust", "AVG_LOCF_RMSE" = "Last Observation"))
+```
+
+
+
+```{r}
+cols_to_keep <- c("Missing_Count", "SD_NN_RMSE", "SD_Spline_RMSE", "SD_Linear_RMSE")
+
+# Melt the selected portion of the data frame for ggplot2
+data_melted <- melt(data[, cols_to_keep], id.vars = "Missing_Count")
+
+# Plot with smooth lines
+ggplot(data_melted, aes(x = Missing_Count, y = value, color = variable)) +
+  geom_smooth(se = FALSE) + # 'se = FALSE' disables the confidence interval shading
+  labs(title = "Smooth Line Graph of Selected SD RMSE by Missing Data Count",
+       x = "Number of Missing Data",
+       y = "SD RMSE Value",
+       color = "Method") +
+  theme_minimal()
+```
+
+```{r}
+data <- read.csv("/Users/tripatpanesar/Desktop/CAP/Model_RMSEs.csv")
+```
+
+```{r}
+filtered_data <- data %>% 
+  filter(Missing_Count >= 4 & Missing_Count <= 9)
+
+# Select columns starting with "AVG" and "Missing_Count"
+cols_to_keep <- c("Missing_Count", grep("^AVG", names(data), value = TRUE))
+
+# Melt the filtered data frame for ggplot2
+data_melted <- melt(filtered_data[, cols_to_keep], id.vars = "Missing_Count")
+
+# Plot with multiple bar plots for each Missing_Count
+ggplot(data_melted, aes(x = factor(Missing_Count), y = value, fill = variable)) +
+  geom_col(position = "dodge") +
+  labs(title = "Bar Plot of AVG RMSE by Missing Data Count",
+       x = "Number of Missing Data",
+       y = "Average RMSE Value",
+       fill = "Method") +
+  theme_minimal()
+```
+
+```{r}
+data_melted <- melt(filtered_data[, cols_to_keep], id.vars = "Missing_Count")
+
+# Plot with multiple bar plots for each Missing_Count, excluding AVG_AA_RMSE
+ggplot(data_melted, aes(x = factor(Missing_Count), y = value, fill = variable)) +
+  geom_col(position = "dodge") +
+  labs(title = "Bar Plot of RMSE by Missing Data Count",
+       x = "Number of Missing Data",
+       y = "RMSE Value",
+       fill = "Method") +
+  theme_minimal() +
+  scale_fill_manual(values = c("AVG_Spline_RMSE" = "blue", "AVG_Linear_RMSE" = "red", "AVG_Stine_RMSE" = "green", "AVG_KF_RMSE" = "orange", "AVG_NN_RMSE" = "purple", "AVG_LOCF_RMSE" = "brown"),
+                     labels = c("AVG_Spline_RMSE" = "Cubic Spline Interpolation",
+                                "AVG_Linear_RMSE" = "Linear Interpolation",
+                                "AVG_Stine_RMSE" = "Stineman Interpolation",
+                                "AVG_KF_RMSE" = "Kalman Smoothing",
+                                "AVG_NN_RMSE" = "Neural Net",
+                                "AVG_LOCF_RMSE" = "Last Observation Carried Forward"))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
