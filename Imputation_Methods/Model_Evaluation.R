@@ -61,10 +61,9 @@ model_perf <- linear_spline_nn_st_a_kf_lo|>
             ,SD_LOCF_RMSE = sd(LOCF_RMSE)
   )
 
+model_perf |>
+  select(Missing_Count, AVG_KF_RMSE, SD_KF_RMSE)
 
-model_perf|>
-  select(Missing_Count,AVG_KF_RMSE,AVG_Spline_RMSE,AVG_Stine_RMSE)|>
-  
 
 model_perf|>
   write_csv('./Documents/UVA_MSDS/Capstones/Glucose/CGM_data/Model_RMSEs.csv')
